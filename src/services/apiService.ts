@@ -17,7 +17,7 @@ export class ApiService {
   }
 
   static async get_weather_data(lat: number, lng: number) {
-    const resp = await fetch(``)
+    const resp = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${this.weatherAPIKey}&units=imperial`)
 
     if (!resp.ok) throw new Error(`Failed with status ${resp.status}`)
 

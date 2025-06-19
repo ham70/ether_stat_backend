@@ -16,23 +16,23 @@ router.get('/', async (req, res) => {
   }
 
   //handle data
-  console.log(query)
   const geocode_data = await ApiService.get_location_data(query)
-  const result = geocode_data.results[0]
-  console.log(geocode_data)
+  const geo_result = geocode_data.results[0]
+
+  const weather_data = await ApiService.get_weather_data(geo_result.geometry.location.lat, geo_result.geometry.location.lng)
 
   return res.json({
     city: {
-        id: result.place_id,
+        id: geo_result.place_id,
         name: query,
-        lat: result.geometry.location.lat,
-        lng: result.geometry.location.lat,
+        lat: geo_result.geometry.location.lat,
+        lng: geo_result.geometry.location.lng,
         weather_data: {
-            location_id: "init_id",
-            temperature: 75,
-            conditions: "sunny",
-            humidity: 80,
-            wind_speed: 6,
+            location_id: geo_result.place_id,
+            temperature: weather_data.main.temp,
+            conditions: weather_data.weather[0].description,
+            humidity: weather_data.main.humidity,
+            wind_speed: weather_data.wind.speed,
             uv_index: 4,
             created_at: 'today'
         }
