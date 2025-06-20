@@ -10,7 +10,7 @@ export class ApiService {
   static async get_location_data(location: string) {
     const resp = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${this.geocodeAPIKey}`)
 
-    if (!resp.ok) throw new Error(`Failed with status ${resp.status}`)
+    if (!resp.ok) throw new Error(`geocode api callfailed with status ${resp.status}`)
 
     const data = await resp.json()
     return data
@@ -19,7 +19,16 @@ export class ApiService {
   static async get_weather_data(lat: number, lng: number) {
     const resp = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${this.weatherAPIKey}&units=imperial`)
 
-    if (!resp.ok) throw new Error(`Failed with status ${resp.status}`)
+    if (!resp.ok) throw new Error(`Weather api call failed with status ${resp.status}`)
+
+    const data = await resp.json()
+    return data
+  }
+
+  static async get_pollen_data(lat: number, lng: number) {
+    const resp = await fetch(``)
+
+    if (!resp.ok) throw new Error(`Pollen api call failed with status ${resp.status}`)
 
     const data = await resp.json()
     return data
