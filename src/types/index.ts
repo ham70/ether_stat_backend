@@ -48,3 +48,13 @@ export interface CityDataResponse {
     //weather: WeatherData;
     //demographics: DemographicData;
 }
+
+export interface RefreshDataRequest {
+    id: string;
+    lat: number;
+    lng: number;
+}
+export interface RefreshDataReseponse {
+    id: string;
+    weather_data: WeatherData;
+}
