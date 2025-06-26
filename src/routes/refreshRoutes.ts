@@ -17,6 +17,7 @@ router.post('/', async (req, res) => {
 
   //handle data
   const weather_data = await ApiService.get_weather_data(data.lat, data.lng)
+  const aqi_data = await ApiService.get_aqi_data(data.lat, data.lng)
 
   return res.json({
     id: data.id,
@@ -40,6 +41,12 @@ router.post('/', async (req, res) => {
       visibility: weather_data.visibility.distance,
       uv_index: weather_data.uvIndex,
       created_at: 'today'
+    },
+    aqi_data: {
+        location_id: data.id,
+        aqi: aqi_data.indexes[0].aqi,
+        category: aqi_data.indexes[0].category,
+        dom: aqi_data.indexes[0].dominantPollutant
     }
   })
 })

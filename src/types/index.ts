@@ -37,14 +37,8 @@ export interface WeatherData {
 export interface AirQualityData {
     location_id: string;
     aqi: number;
-    co: number;
-    no: number;
-    no2: number;
-    o3: number;
-    so2: number;
-    nh3: number;
-    pm2_5: number;
-    pm10: number;
+    category: string;
+    dom: string;
 }
 
 export interface DemographicData {
@@ -60,7 +54,8 @@ export interface DemographicData {
 
 export interface CityDataResponse {
     location: LocationData;
-    //weather: WeatherData;
+    weather: WeatherData;
+    aqi_data: AirQualityData;
     //demographics: DemographicData;
 }
 
@@ -72,4 +67,5 @@ export interface RefreshDataRequest {
 export interface RefreshDataResponse {
     id: string;
     weather_data: WeatherData;
+    aqi_data: AirQualityData
 }

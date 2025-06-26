@@ -20,7 +20,8 @@ router.get('/', async (req, res) => {
   const geo_result = geocode_data.results[0]
 
   const weather_data = await ApiService.get_weather_data(geo_result.geometry.location.lat, geo_result.geometry.location.lng)
-
+  const aqi_data = await ApiService.get_aqi_data(geo_result.geometry.location.lat, geo_result.geometry.location.lng)
+  
   return res.json({
     city: {
       id: geo_result.place_id,
@@ -47,6 +48,12 @@ router.get('/', async (req, res) => {
         visibility: weather_data.visibility.distance,
         uv_index: weather_data.uvIndex,
         created_at: 'today'
+      },
+      aqi_data: {
+        location_id: geo_result.place_id,
+        aqi: aqi_data.indexes[0].aqi,
+        category: aqi_data.indexes[0].category,
+        dom: aqi_data.indexes[0].dominantPollutant
       }
     }
   })
