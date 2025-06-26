@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 //import dataservice
 import cityRoutes from './routes/cityRoutes'
+import refreshRoutes from './routes/refreshRoutes'
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ app.use(express.json())
 
 //add other app enpoint below
 app.use('/search', cityRoutes)
+app.use('/refresh', refreshRoutes)
 
 app.get('/health', (req, res) => {
     res.json({status: 'OK', timestamp: new Date().toISOString()})

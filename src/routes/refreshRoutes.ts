@@ -1,18 +1,18 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import { RefreshDataRequest, RefreshDataReseponse, CityDataResponse, WeatherData } from "../types"
+import { CityDataResponse, WeatherData, RefreshDataResponse, RefreshDataRequest } from "../types"
 import { ApiService } from '../services/apiService'
 
 const router = express.Router()
 router.use(bodyParser.urlencoded({extended: false}))
 router.use(bodyParser.json())
 
-//post routers
+//post routes
 router.post('/', async (req, res) => {
-  const data: RefreshDataRequest = req.body 
+  const data: RefreshDataRequest = req.body
 
   if (!data) {
-    return res.status(400).json({ error: 'Missing query parameter `data`' })
+    return res.status(400).json({ error: 'Missing data in post body' })
   }
 
   //handle data
