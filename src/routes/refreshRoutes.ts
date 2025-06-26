@@ -21,13 +21,13 @@ router.post('/', async (req, res) => {
   return res.json({
     id: data.id,
     weather_data: {
-        location_id: data.id,
-        temperature: weather_data.main.temp,
-        conditions: weather_data.weather[0].description,
-        humidity: weather_data.main.humidity,
-        wind_speed: weather_data.wind.speed,
-        uv_index: 4,
-        created_at: 'today'
+      location_id: data.id,
+      temperature: weather_data.temperature.degrees,
+      conditions: weather_data.weatherCondition.description.text,
+      humidity: weather_data.relativeHumidity,
+      wind_speed: weather_data.wind.speed.value,
+      uv_index: weather_data.uvIndex,
+      created_at: 'today'
     }
   })
 })
