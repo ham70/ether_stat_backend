@@ -21,13 +21,25 @@ router.post('/', async (req, res) => {
   return res.json({
     id: data.id,
     weather_data: {
-        location_id: data.id,
-        temperature: weather_data.main.temp,
-        conditions: weather_data.weather[0].description,
-        humidity: weather_data.main.humidity,
-        wind_speed: weather_data.wind.speed,
-        uv_index: 4,
-        created_at: 'today'
+      location_id: data.id,
+      conditions: weather_data.weatherCondition.description.text,
+      temperature: {
+        main: weather_data.temperature.degrees,
+        feels_like: weather_data.feelsLikeTemperature.degrees,
+        min: weather_data.currentConditionsHistory.maxTemperature.degrees,
+        max: weather_data.currentConditionsHistory.minTemperature.degrees
+      },
+      humidity: weather_data.relativeHumidity,
+      wind: {
+        direction: weather_data.wind.direction,
+        speed: weather_data.wind.speed.value,
+        gust: weather_data.wind.gust.value,
+        chill: weather_data.windChill.degrees,
+      },
+      thunder_storm: weather_data.thunderstormProbability,
+      visibility: weather_data.visibility.distance,
+      uv_index: weather_data.uvIndex,
+      created_at: 'today'
     }
   })
 })
