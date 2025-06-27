@@ -7,6 +7,7 @@ export class ApiService {
   private static weatherAPIKey: string = process.env.WEATHER_API_KEY || ''
   private static geocodeAPIKey: string = process.env.GEOCODE_API_KEY || ''
   private static aqiAPIKey: string = process.env.AQI_API_KEY || ''
+  private static censusAPIKey: string = process.env.CENSUS_API_KEY || ''
 
   static async get_location_data(location: string): Promise<LocationData>{
     const geo_resp = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${this.geocodeAPIKey}`)
@@ -67,5 +68,26 @@ export class ApiService {
 
     const data = await resp.json()
     return data
+  }
+
+  static async get_demo_data(id: string, cfips: string, sfips: string) : Promise<DemographicData> {
+    const resp = await fetch(`https://api.census.gov/data/2022/acs/acs5?get=B01003_001E,B19013_001E,B25001_001E,B23025_004E,B23025_001E&for=county:${cfips}&in=state:${sfips}&key=${this.censusAPIKey}`)
+    const data = await resp.json()
+
+    const current_date: Date = new Date()
+    const string_date: string = current_date.toString()
+
+    const clean_data = {
+      location_id: id,
+      population: data[1][0],
+      median_hh_income: data[1][1],
+      employment_rate: (100 * (data[1][3] / data[1][2])),
+      total_housing: data[1][4],
+      year: 2022,
+      created_at: string_date,
+      updated_at: string_date
+    }
+
+    return clean_data
   }
 }
