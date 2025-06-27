@@ -43,7 +43,6 @@ export interface AirQualityData {
   dom: string;
   created_at: string;
 }
-
 export interface DemographicData {
   location_id: string;
   population: number;
@@ -59,7 +58,7 @@ export interface CityDataResponse {
   id:string;
   name: string;
   location: LocationData;
-  weather: WeatherData;
+  weather_data: WeatherData;
   aqi_data: AirQualityData;
   demographics: DemographicData;
 }
