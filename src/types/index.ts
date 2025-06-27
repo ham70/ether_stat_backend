@@ -55,10 +55,12 @@ export interface DemographicData {
 }
 
 export interface CityDataResponse {
-    location: LocationData;
-    weather: WeatherData;
-    aqi_data: AirQualityData;
-    demographics: DemographicData;
+  id:string;
+  name: string;
+  location: LocationData;
+  weather: WeatherData;
+  aqi_data: AirQualityData;
+  demographics: DemographicData;
 }
 
 export interface RefreshDataRequest {
