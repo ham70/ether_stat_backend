@@ -18,8 +18,6 @@ export class ApiService {
 
     const loc_resp = await fetch(`https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x=${geo_data.results[0].geometry.location.lng}&y=${geo_data.results[0].geometry.location.lat}&benchmark=Public_AR_Current&vintage=Current_Current&format=json`)
     const loc_data = await loc_resp.json()
-    console.log(geo_data)
-    console.log(loc_data)
 
     const current_date: Date = new Date()
     const string_date: string = current_date.toString()
