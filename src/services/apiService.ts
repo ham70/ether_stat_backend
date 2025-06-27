@@ -50,24 +50,24 @@ export class ApiService {
 
     const clean_data = {
       location_id: id,
-        conditions: data.weatherCondition.description.text,
-        temperature: {
-          main: data.temperature.degrees,
-          feels_like: data.feelsLikeTemperature.degrees,
-          min: data.currentConditionsHistory.maxTemperature.degrees,
-          max: data.currentConditionsHistory.minTemperature.degrees
-        },
-        humidity: data.relativeHumidity,
-        wind: {
-          direction: data.wind.direction,
-          speed: data.wind.speed.value,
-          gust: data.wind.gust.value,
-          chill: data.windChill.degrees,
-        },
-        thunder_storm: data.thunderstormProbability,
-        visibility: data.visibility.distance,
-        uv_index: data.uvIndex,
-        created_at: string_date
+      conditions: data.weatherCondition.description.text,
+      temperature: {
+        main: data.temperature.degrees,
+        feels_like: data.feelsLikeTemperature.degrees,
+        min: data.currentConditionsHistory.maxTemperature.degrees,
+        max: data.currentConditionsHistory.minTemperature.degrees
+      },
+      humidity: data.relativeHumidity,
+      wind: {
+        direction: data.wind.direction,
+        speed: data.wind.speed.value,
+        gust: data.wind.gust.value,
+        chill: data.windChill.degrees,
+      },
+      thunder_storm: data.thunderstormProbability,
+      visibility: data.visibility.distance,
+      uv_index: data.uvIndex,
+      created_at: string_date
     }
     return clean_data
   }
