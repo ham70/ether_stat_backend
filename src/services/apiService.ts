@@ -44,10 +44,13 @@ export class ApiService {
     if (!resp.ok) throw new Error(`Weather api call failed with status ${resp.status}`)
 
     const data = await resp.json()
-    return data
+    const clean_data = {
+
+    }
+    return clean_data
   }
 
-  static async get_aqi_data(lat: number, lng: number) {
+  static async get_aqi_data(id: string, lat: number, lng: number): Promise<AirQualityData>{
     const post_data = {
       universalAqi: false,
       location: {
@@ -67,7 +70,13 @@ export class ApiService {
     if (!resp.ok) throw new Error(`Air quality api call failed with status ${resp.status}`)
 
     const data = await resp.json()
-    return data
+    const clean_data = {
+      location_id: id,
+      aqi: data.indexes[0].aqi,
+      category: data.indexes[0].category,
+      dom: data.indexes[0].dominantPollutant
+    }
+    return clean_data
   }
 
   static async get_demo_data(id: string, cfips: string, sfips: string) : Promise<DemographicData> {
@@ -87,7 +96,6 @@ export class ApiService {
       created_at: string_date,
       updated_at: string_date
     }
-
     return clean_data
   }
 }
