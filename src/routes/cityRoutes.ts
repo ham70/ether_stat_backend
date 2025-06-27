@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
     id: loc_data.id,
     name: loc_data.name,
     location: loc_data,
-    weather: weather_data,
+    weather_data: weather_data,
     aqi_data: aqi_data,
     demographics: demo_data
   })
