@@ -1,11 +1,13 @@
 export interface LocationData {
     id: string;
-    city: string;
-    state: string;
-    latitude: number;
-    longitude: number;
-    elevation: number;
-    fips_code: string;
+    name: string;
+    lat: number;
+    lng: number;
+    county_name: string;
+    fips_codes: {
+      county: string;
+      state: string;
+    }
     created_at: string;
     updated_at: string;
 }
@@ -44,9 +46,9 @@ export interface AirQualityData {
 export interface DemographicData {
   location_id: string;
   population: number;
-  unemployment_rate: number;
-  crime_rate: number;
-  homelessness_count: number;
+  median_hh_income: number;
+  employment_rate: number;
+  total_housing: number;
   year: number;
   created_at: string;
   updated_at: string;
@@ -56,7 +58,7 @@ export interface CityDataResponse {
     location: LocationData;
     weather: WeatherData;
     aqi_data: AirQualityData;
-    //demographics: DemographicData;
+    demographics: DemographicData;
 }
 
 export interface RefreshDataRequest {
