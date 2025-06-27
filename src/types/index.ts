@@ -1,15 +1,15 @@
 export interface LocationData {
-    id: string;
-    name: string;
-    lat: number;
-    lng: number;
-    county_name: string;
-    fips_codes: {
-      county: string;
-      state: string;
-    }
-    created_at: string;
-    updated_at: string;
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  county_name: string;
+  fips_codes: {
+    county: string;
+    state: string;
+  }
+  created_at: string;
+  updated_at: string;
 }
 
 export interface WeatherData {
@@ -24,8 +24,8 @@ export interface WeatherData {
   humidity: number;
   wind: {
     direction: {
-        degrees: number;
-        cardinal: string;
+      degrees: number;
+      cardinal: string;
     }
     speed: number;
     gust: number;
@@ -37,10 +37,11 @@ export interface WeatherData {
   created_at: string;
 }
 export interface AirQualityData {
-    location_id: string;
-    aqi: number;
-    category: string;
-    dom: string;
+  location_id: string;
+  aqi: number;
+  category: string;
+  dom: string;
+  created_at: string;
 }
 
 export interface DemographicData {
@@ -64,12 +65,12 @@ export interface CityDataResponse {
 }
 
 export interface RefreshDataRequest {
-    id: string;
-    lat: number;
-    lng: number;
+  id: string;
+  lat: number;
+  lng: number;
 }
 export interface RefreshDataResponse {
-    id: string;
-    weather_data: WeatherData;
-    aqi_data: AirQualityData
+  id: string;
+  weather_data: WeatherData;
+  aqi_data: AirQualityData;
 }
