@@ -16,8 +16,10 @@ export class ApiService {
 
     const geo_data = await geo_resp.json()
 
-    const loc_resp = await fetch(`https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x=${geo_data.results[0].geometry.location.lat}&y=${geo_data.results[0].geometry.location.lng}&benchmark=Public_AR_Current&vintage=Current_Current&format=json`)
+    const loc_resp = await fetch(`https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x=${geo_data.results[0].geometry.location.lng}&y=${geo_data.results[0].geometry.location.lat}&benchmark=Public_AR_Current&vintage=Current_Current&format=json`)
     const loc_data = await loc_resp.json()
+    console.log(geo_data)
+    console.log(loc_data)
 
     const current_date: Date = new Date()
     const string_date: string = current_date.toString()
@@ -38,14 +40,36 @@ export class ApiService {
     return clean_data
   }
 
-  static async get_weather_data(lat: number, lng: number) {
+  static async get_weather_data(id: string, lat: number, lng: number): Promise<WeatherData>{
     const resp = await fetch(`https://weather.googleapis.com/v1/currentConditions:lookup?key=${this.weatherAPIKey}&location.latitude=${lat}&location.longitude=${lng}&unitsSystem=IMPERIAL`)
 
     if (!resp.ok) throw new Error(`Weather api call failed with status ${resp.status}`)
 
     const data = await resp.json()
-    const clean_data = {
 
+    const current_date: Date = new Date()
+    const string_date: string = current_date.toString()
+
+    const clean_data = {
+      location_id: id,
+        conditions: data.weatherCondition.description.text,
+        temperature: {
+          main: data.temperature.degrees,
+          feels_like: data.feelsLikeTemperature.degrees,
+          min: data.currentConditionsHistory.maxTemperature.degrees,
+          max: data.currentConditionsHistory.minTemperature.degrees
+        },
+        humidity: data.relativeHumidity,
+        wind: {
+          direction: data.wind.direction,
+          speed: data.wind.speed.value,
+          gust: data.wind.gust.value,
+          chill: data.windChill.degrees,
+        },
+        thunder_storm: data.thunderstormProbability,
+        visibility: data.visibility.distance,
+        uv_index: data.uvIndex,
+        created_at: string_date
     }
     return clean_data
   }
@@ -70,11 +94,16 @@ export class ApiService {
     if (!resp.ok) throw new Error(`Air quality api call failed with status ${resp.status}`)
 
     const data = await resp.json()
+
+    const current_date: Date = new Date()
+    const string_date: string = current_date.toString()
+
     const clean_data = {
       location_id: id,
       aqi: data.indexes[0].aqi,
       category: data.indexes[0].category,
-      dom: data.indexes[0].dominantPollutant
+      dom: data.indexes[0].dominantPollutant,
+      created_at: string_date
     }
     return clean_data
   }
