@@ -2,10 +2,13 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import { CityDataResponse, WeatherData } from "../types"
 import { ApiService } from '../services/apiService'
+import Database from '../database/database'
 
 const router = express.Router()
 router.use(bodyParser.urlencoded({extended: false}))
 router.use(bodyParser.json())
+
+const db = new Database()
 
 //get routers
 router.get('/', async (req, res) => {
@@ -21,15 +24,26 @@ router.get('/', async (req, res) => {
   const aqi_data = await ApiService.get_aqi_data(loc_data.id, loc_data.lat, loc_data.lng)
   const demo_data = await ApiService.get_demo_data(loc_data.id, loc_data.fips_codes.county, loc_data.fips_codes.state)
 
-  return res.json({
+  const city: CityDataResponse= {
     id: loc_data.id,
     name: loc_data.name,
     location: loc_data,
     weather_data: weather_data,
     aqi_data: aqi_data,
     demographics: demo_data
-  })
+  }
+
+  await db.insertCityData(city)
+
+  return res.json(city)
 })
 
+router.get('/check/', async (req, res) => {
+  const id = req.query.id as string
+
+  const data = await db.getCityData(id)
+
+  return res.json(data)
+})
 
 export default router

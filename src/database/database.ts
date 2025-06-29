@@ -301,6 +301,13 @@ class Database {
     };
   }
 
+  async insertCityData(city: CityDataResponse): Promise<void> {
+    this.insertLocation(city.location)
+    this.insertWeatherData(city.weather_data)
+    this.insertAirQualityData(city.aqi_data)
+    this.insertDemographicData(city.demographics)
+  }
+
   close(): void {
     this.db.close();
   }
