@@ -25,6 +25,7 @@ export class ApiService {
     const clean_data: LocationData = {
       id: geo_data.results[0].place_id,
       name: geo_data.results[0].address_components[0].long_name,
+      full_address: geo_data.results[0].formatted_address,
       lat: geo_data.results[0].geometry.location.lat,
       lng: geo_data.results[0].geometry.location.lng,
       county_name: loc_data.result.geographies.Counties[0].NAME,
