@@ -22,6 +22,7 @@ class Database {
       `CREATE TABLE IF NOT EXISTS locations (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
+        full_address TEXT NOT NULL,
         lat REAL NOT NULL,
         lng REAL NOT NULL,
         county_name TEXT,
@@ -84,11 +85,12 @@ class Database {
     return new Promise((resolve, reject) => {
       this.db.run(
         `INSERT OR REPLACE INTO locations
-        (id, name, lat, lng, county_name, fips_county, fips_state, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+        (id, name, full_address, lat, lng, county_name, fips_county, fips_state, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
         [
           location.id,
           location.name,
+          location.full_address,
           location.lat,
           location.lng,
           location.county_name,
@@ -115,6 +117,7 @@ class Database {
           const result = row as {
             id: string;
             name: string;
+            full_address: string;
             lat: number;
             lng: number;
             county_name: string;
@@ -127,6 +130,7 @@ class Database {
           const location: LocationData = {
             id: result.id,
             name: result.name,
+            full_address: result.full_address,
             lat: result.lat,
             lng: result.lng,
             county_name: result.county_name,
@@ -306,6 +310,21 @@ class Database {
     this.insertWeatherData(city.weather_data)
     this.insertAirQualityData(city.aqi_data)
     this.insertDemographicData(city.demographics)
+  }
+
+  async getAllAirData(){
+    return new Promise((resolve, reject) => {
+      this.db.get(
+        `SELECT * FROM air_quality_data`,
+        (err, row) => {
+          if (err) return reject(err);
+          if (!row) return reject(new Error('AQI data not found'));
+
+          const result = row as AirQualityData;
+          resolve(result);
+        }
+      );
+    });
   }
 
   close(): void {

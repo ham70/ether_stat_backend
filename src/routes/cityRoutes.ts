@@ -45,5 +45,8 @@ router.get('/check/', async (req, res) => {
 
   return res.json(data)
 })
-
+router.get('/air', async (req, res) => {
+  const data = await db.getAllAirData()
+  return res.json(data)
+})
 export default router

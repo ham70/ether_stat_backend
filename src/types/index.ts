@@ -1,6 +1,7 @@
 export interface LocationData {
   id: string;
   name: string;
+  full_address: string;
   lat: number;
   lng: number;
   county_name: string;
