@@ -312,20 +312,18 @@ class Database {
     this.insertDemographicData(city.demographics)
   }
 
-  async getAllAirData(){
-    return new Promise((resolve, reject) => {
-      this.db.get(
-        `SELECT * FROM air_quality_data`,
-        (err, row) => {
-          if (err) return reject(err);
-          if (!row) return reject(new Error('AQI data not found'));
-
-          const result = row as AirQualityData;
-          resolve(result);
-        }
-      );
-    });
-  }
+async getAllAirData() {
+  return new Promise((resolve, reject) => {
+    this.db.all(
+      `SELECT * FROM air_quality_data`,
+      (err, rows) => {
+        if (err) return reject(err);
+        if (!rows || rows.length === 0) return reject(new Error('No AQI data found'));
+        resolve(rows);
+      }
+    );
+  });
+}
 
   close(): void {
     this.db.close();
