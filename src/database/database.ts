@@ -1,20 +1,20 @@
-import sqlite3 from 'sqlite3';
-import path from 'path';
+import sqlite3 from 'sqlite3'
+import path from 'path'
 import {
   LocationData,
   WeatherData,
   DemographicData,
   AirQualityData,
   CityDataResponse
-} from '../types/index';
+} from '../types/index'
 
 class Database {
-  private db: sqlite3.Database;
+  private db: sqlite3.Database
 
   constructor() {
-    const dbPath = path.join(__dirname, '../../data/city_data.db');
-    this.db = new sqlite3.Database(dbPath);
-    this.initTables();
+    const dbPath = path.join(__dirname, '../../data/city_data.db')
+    this.db = new sqlite3.Database(dbPath)
+    this.initTables()
   }
 
   private initTables(): void {
@@ -72,13 +72,13 @@ class Database {
         updated_at TEXT,
         FOREIGN KEY (location_id) REFERENCES locations(id)
       )`
-    ];
+    ]
 
     tables.forEach((table) => {
       this.db.run(table, (err) => {
-        if (err) console.error('Error creating table:', err);
-      });
-    });
+        if (err) console.error('Error creating table:', err)
+      })
+    })
   }
 
   async insertLocation(location: Omit<LocationData, 'created_at' | 'updated_at'>): Promise<string> {
@@ -98,11 +98,11 @@ class Database {
           location.fips_codes.state
         ],
         function (err) {
-          if (err) reject(err);
-          else resolve(location.id);
+          if (err) reject(err)
+          else resolve(location.id)
         }
-      );
-    });
+      )
+    })
   }
 
   async getLocationById(id: string): Promise<LocationData> {
@@ -111,8 +111,8 @@ class Database {
         `SELECT * FROM locations WHERE id = ?`,
         [id],
         (err, row) => {
-          if (err) return reject(err);
-          if (!row) return reject(new Error('Location not found'));
+          if (err) return reject(err)
+          if (!row) return reject(new Error('Location not found'))
 
           const result = row as {
             id: string;
@@ -125,7 +125,7 @@ class Database {
             fips_state: string;
             created_at: string;
             updated_at: string;
-          };
+          }
 
           const location: LocationData = {
             id: result.id,
@@ -140,12 +140,12 @@ class Database {
             },
             created_at: result.created_at,
             updated_at: result.updated_at
-          };
+          }
 
-          resolve(location);
+          resolve(location)
         }
-      );
-    });
+      )
+    })
   }
 
   async insertWeatherData(data: Omit<WeatherData, 'created_at'>): Promise<void> {
@@ -177,8 +177,8 @@ class Database {
           data.uv_index
         ],
         (err) => (err ? reject(err) : resolve())
-      );
-    });
+      )
+    })
   }
 
   async getWeatherData(locationId: string): Promise<WeatherData> {
@@ -215,12 +215,12 @@ class Database {
             visibility: result.visibility,
             uv_index: result.uv_index,
             created_at: result.created_at
-          };
+          }
 
           resolve(weather);
         }
-      );
-    });
+      )
+    })
   }
 
   async insertAirQualityData(data: Omit<AirQualityData, 'created_at'>): Promise<void> {
@@ -231,8 +231,8 @@ class Database {
         ) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)`,
         [data.location_id, data.aqi, data.category, data.dom],
         (err) => (err ? reject(err) : resolve())
-      );
-    });
+      )
+    })
   }
 
   async getAirQualityData(locationId: string): Promise<AirQualityData> {
@@ -242,13 +242,13 @@ class Database {
         [locationId],
         (err, row) => {
           if (err) return reject(err);
-          if (!row) return reject(new Error('AQI data not found'));
+          if (!row) return reject(new Error('AQI data not found'))
 
-          const result = row as AirQualityData;
-          resolve(result);
+          const result = row as AirQualityData
+          resolve(result)
         }
-      );
-    });
+      )
+    })
   }
 
   async insertDemographicData(data: Omit<DemographicData, 'created_at' | 'updated_at'>): Promise<void> {
@@ -267,8 +267,8 @@ class Database {
           data.year
         ],
         (err) => (err ? reject(err) : resolve())
-      );
-    });
+      )
+    })
   }
 
   async getDemographics(locationId: string): Promise<DemographicData> {
@@ -280,11 +280,11 @@ class Database {
           if (err) return reject(err);
           if (!row) return reject(new Error('Demographic data not found'));
 
-          const result = row as DemographicData;
-          resolve(result);
+          const result = row as DemographicData
+          resolve(result)
         }
-      );
-    });
+      )
+    })
   }
 
   async getCityData(locationId: string): Promise<CityDataResponse> {
@@ -293,7 +293,7 @@ class Database {
       this.getWeatherData(locationId),
       this.getAirQualityData(locationId),
       this.getDemographics(locationId)
-    ]);
+    ])
 
     return {
       id: location.id,
@@ -302,32 +302,44 @@ class Database {
       weather_data,
       aqi_data,
       demographics
-    };
+    }
   }
-
   async insertCityData(city: CityDataResponse): Promise<void> {
     this.insertLocation(city.location)
     this.insertWeatherData(city.weather_data)
     this.insertAirQualityData(city.aqi_data)
     this.insertDemographicData(city.demographics)
   }
-
+async getSearchSuggestions(query: string) {
+  return new Promise((resolve, reject) => {
+    this.db.all(
+      `SELECT full_address, id FROM locations
+      WHERE full_address LIKE ?
+      LIMIT 10`,
+      [`${query}%`],
+      (err, rows) => {
+        if (err) return reject(err)
+        resolve(rows || [])
+      }
+    )
+  })
+}
 async getAllAirData() {
   return new Promise((resolve, reject) => {
     this.db.all(
       `SELECT * FROM air_quality_data`,
       (err, rows) => {
-        if (err) return reject(err);
+        if (err) return reject(err)
         if (!rows || rows.length === 0) return reject(new Error('No AQI data found'));
-        resolve(rows);
+        resolve(rows)
       }
     );
   });
 }
 
   close(): void {
-    this.db.close();
+    this.db.close()
   }
 }
 
-export default Database;
+export default Database
