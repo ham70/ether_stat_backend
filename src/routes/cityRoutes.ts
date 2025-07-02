@@ -2,13 +2,11 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import { CityDataResponse, WeatherData } from "../types"
 import { ApiService } from '../services/apiService'
-import Database from '../database/database'
+import db from '../database/dbInstance'
 
 const router = express.Router()
 router.use(bodyParser.urlencoded({extended: false}))
 router.use(bodyParser.json())
-
-const db = new Database()
 
 //get routers
 router.get('/', async (req, res) => {
