@@ -16,11 +16,11 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Missing data in post body' })
   }
 
-  const weather = await db.getAirQualityData(data.id)
-  const air = await db.getWeatherData(data.id)
+  const weather = await db.getWeatherData(data.id)
+  const air = await db.getAirQualityData(data.id)
 
   //checking weather data age
-  const date = new Date(weather.created_at)
+  const date = new Date(weathereated_at)
   const now = new Date()
 
   const diffMs = now.getTime() - date.getTime();
