@@ -316,7 +316,7 @@ async getSearchSuggestions(query: string) {
       `SELECT full_address, id FROM locations
       WHERE full_address LIKE ?
       LIMIT 10`,
-      [`${query}%`],
+      [`%${query}%`],
       (err, rows) => {
         if (err) return reject(err)
         resolve(rows || [])
