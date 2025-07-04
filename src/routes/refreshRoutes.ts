@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
   const air = await db.getAirQualityData(data.id)
 
   //checking weather data age
-  const date = new Date(weathereated_at)
+  const date = new Date(weather.created_at)
   const now = new Date()
 
   const diffMs = now.getTime() - date.getTime();
