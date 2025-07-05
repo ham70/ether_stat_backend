@@ -333,8 +333,20 @@ async getAllAirData() {
         if (!rows || rows.length === 0) return reject(new Error('No AQI data found'));
         resolve(rows)
       }
-    );
-  });
+    )
+  })
+}
+async getAllLocData() {
+  return new Promise((resolve, reject) => {
+    this.db.all(
+      `SELECT * FROM locations`,
+      (err, rows) => {
+        if (err) return reject(err)
+        if (!rows || rows.length === 0) return reject(new Error('No loc data found'));
+        resolve(rows)
+      }
+    )
+  })
 }
 
   close(): void {
