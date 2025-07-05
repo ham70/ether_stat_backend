@@ -11,8 +11,13 @@ router.use(bodyParser.json())
 //get routers
 router.get('/', async (req, res) => {
   const query = req.query.q as string
-  if (!query) {
-    return res.status(400).json({ error: 'Missing query parameter `q`' })
+  const id = req.query.id as string
+  if (!query && (id.trim() === '' || id === 'undefined')) {
+    return res.status(400).json({ error: 'Missing query parameter `q` or `id`' })
+  }
+  if(!(id.trim() === '' || id === 'undefined')){
+    const city_data = await db.getCityData(id)
+    return res.json(city_data)
   }
   //handle data
   const loc_data = await ApiService.get_location_data(query)
@@ -41,7 +46,7 @@ router.get('/suggest', async(req, res) => {
   return res.json(suggestions)
 })
 
-
+//test routes
 router.get('/check/', async (req, res) => {
   const id = req.query.id as string
   const data = await db.getCityData(id)
@@ -50,6 +55,10 @@ router.get('/check/', async (req, res) => {
 router.get('/air', async (req, res) => {
   const data = await db.getAllAirData()
   return res.json(data)
+})
+router.get('/loc', async (request, response) => {
+  const data = await db.getAllLocData()
+  return response.json(data)
 })
 
 export default router

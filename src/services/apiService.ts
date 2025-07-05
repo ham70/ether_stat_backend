@@ -108,7 +108,7 @@ export class ApiService {
   }
 
   static async get_demo_data(id: string, cfips: string, sfips: string) : Promise<DemographicData> {
-    const resp = await fetch(`https://api.census.gov/data/2022/acs/acs5?get=B01003_001E,B19013_001E,B25001_001E,B23025_004E,B23025_001E&for=county:${cfips}&in=state:${sfips}&key=${this.censusAPIKey}`)
+    const resp = await fetch(`https://api.census.gov/data/2022/acs/acs5?get=B01003_001E,B19013_001E,B25001_001E,B23025_004E,B23025_003E&for=county:${cfips}&in=state:${sfips}&key=${this.censusAPIKey}`)
     const data = await resp.json()
 
     const current_date: Date = new Date()
@@ -118,7 +118,7 @@ export class ApiService {
       location_id: id,
       population: data[1][0],
       median_hh_income: data[1][1],
-      employment_rate: (100 * (data[1][3] / data[1][2])),
+      employment_rate: parseFloat((100 * (data[1][2] / data[1][3])).toFixed(2)),
       total_housing: data[1][4],
       year: 2022,
       created_at: string_date,
