@@ -12,11 +12,11 @@ router.use(bodyParser.json())
 router.get('/', async (req, res) => {
   const query = req.query.q as string
   const id = req.query.id as string
-  if (!query && !id) {
+  if (!query && (id.trim() === '' || id === 'undefined')) {
     return res.status(400).json({ error: 'Missing query parameter `q` or `id`' })
   }
-  if(id){
-    const city_data = db.getCityData(id)
+  if(!(id.trim() === '' || id === 'undefined')){
+    const city_data = await db.getCityData(id)
     return res.json(city_data)
   }
   //handle data
