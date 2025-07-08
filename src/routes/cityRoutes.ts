@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
   if (!query && (id.trim() === '' || id === 'undefined')) {
     return res.status(400).json({ error: 'Missing query parameter `q` or `id`' })
   }
-  if(!(id.trim() === '' || id === 'undefined')){
+  if(id && !(id.trim() === '' || id === 'undefined')){
     const city_data = await db.getCityData(id)
     return res.json(city_data)
   }
