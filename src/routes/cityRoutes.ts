@@ -8,7 +8,7 @@ const router = express.Router()
 router.use(bodyParser.urlencoded({extended: false}))
 router.use(bodyParser.json())
 
-//get routers
+//main routes
 router.get('/', async (req, res) => {
   const query = req.query.q as string
   const id = req.query.id as string
@@ -44,6 +44,11 @@ router.get('/suggest', async(req, res) => {
 
   const suggestions = await db.getSearchSuggestions(query)
   return res.json(suggestions)
+})
+router.post('/uloc', async (req, res) => {
+  const coords = req.body
+  const data = ApiService.get_location_data_with_coords(coords.latitude, coords.longitude)
+  return res.json(data)
 })
 
 //test routes

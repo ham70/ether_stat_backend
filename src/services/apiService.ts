@@ -38,6 +38,42 @@ export class ApiService {
     }
     return clean_data
   }
+  static async get_location_data_with_coords(lat: number, lng: number): Promise<LocationData>{
+    const geo_resp = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${this.geocodeAPIKey}`)
+    const loc_resp = await fetch(`https://geocoding.geo.census.gov/geocoder/geographies/coordinates?x=${lng}&y=${lat}&benchmark=Public_AR_Current&vintage=Current_Current&format=json`)
+    const geo_data = await geo_resp.json()
+    const loc_data = await loc_resp.json()
+
+    const current_date: Date = new Date()
+    const string_date: string = current_date.toString()
+
+    //finding proper name
+    var name = ""
+    geo_data.results[0].address_components.forEach((group: any)=>{
+      if(group.types[0] === "neighborhood"){
+        name = group.long_name
+      }
+    })
+    if(name === ""){
+      name = geo_data.results[0].address_components[0].long_name
+    }
+    
+    const clean_data: LocationData = {
+      id: geo_data.results[0].place_id,
+      name: name,
+      full_address: geo_data.results[0].formatted_address,
+      lat: lat,
+      lng: lng,
+      county_name: loc_data.result.geographies.Counties[0].NAME,
+      fips_codes: {
+        county: loc_data.result.geographies.Counties[0].COUNTY,
+        state: loc_data.result.geographies.Counties[0].STATE
+      },
+      created_at: string_date,
+      updated_at: string_date
+    }
+    return clean_data
+  }
 
   static async get_weather_data(id: string, lat: number, lng: number): Promise<WeatherData>{
     const resp = await fetch(`https://weather.googleapis.com/v1/currentConditions:lookup?key=${this.weatherAPIKey}&location.latitude=${lat}&location.longitude=${lng}&unitsSystem=IMPERIAL`)
