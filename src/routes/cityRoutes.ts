@@ -1,6 +1,6 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import { CityDataResponse, WeatherData } from "../types"
+import { CityDataResponse, LocationData, WeatherData } from "../types"
 import { ApiService } from '../services/apiService'
 import db from '../database/dbInstance'
 
@@ -46,9 +46,21 @@ router.get('/suggest', async(req, res) => {
   return res.json(suggestions)
 })
 router.post('/uloc', async (req, res) => {
-  const coords = req.body
-  const data = ApiService.get_location_data_with_coords(coords.latitude, coords.longitude)
-  return res.json(data)
+  const coords = req.body.user_coords
+  const loc_data: LocationData = await ApiService.get_location_data_with_coords(coords.latitude, coords.longitude)
+  const weather_data: WeatherData = await ApiService.get_weather_data(loc_data.id, loc_data.lat, loc_data.lng)
+  const aqi_data = await ApiService.get_aqi_data(loc_data.id, loc_data.lat, loc_data.lng)
+  const demo_data = await ApiService.get_demo_data(loc_data.id, loc_data.fips_codes.county, loc_data.fips_codes.state)
+  
+  const city: CityDataResponse= {
+    id: loc_data.id,
+    name: loc_data.name,
+    location: loc_data,
+    weather_data: weather_data,
+    aqi_data: aqi_data,
+    demographics: demo_data
+  }
+  return res.json(city)
 })
 
 //test routes
